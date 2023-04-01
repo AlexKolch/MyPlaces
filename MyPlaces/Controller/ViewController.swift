@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let places = Place.getPlaces()
+    var places = Place.getPlaces()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +38,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         cell.locationLabel.text = places[indexPath.row].location
         cell.typeLabel.text = places[indexPath.row].type
 
-        cell.imageOfPlaces.image = UIImage(named: places[indexPath.row].image)
+        cell.imageOfPlaces.image = UIImage(named: places[indexPath.row].restaurantImage!)
         cell.imageOfPlaces.layer.cornerRadius = cell.imageOfPlaces.frame.size.height / 2
         cell.imageOfPlaces.clipsToBounds = true
 

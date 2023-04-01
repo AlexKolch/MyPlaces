@@ -8,11 +8,32 @@
 import UIKit
 
 class NewPlaceVC: UITableViewController {
+    var newPlace: Place?
+
+
+    @IBOutlet var placeImage: UIImageView!
+
+    @IBOutlet var placeName: UITextField!
+
+    @IBOutlet var placeLocation: UITextField!
+
+    @IBOutlet var placeType: UITextField!
+
+    @IBOutlet weak var saveButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         //убрать разлиновку с пустыми ячейками
         tableView.tableFooterView = UIView()
+        saveButton.isEnabled = false
+        placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+    }
+
+    @IBAction func tappedSave(_ sender: UIBarButtonItem) {
+        saveNewPlace()
+        let vc = ViewController()
+        vc.places.append(newPlace!)
+        self.navigationController?.popViewController(animated: true)
     }
 
 
@@ -37,6 +58,11 @@ class NewPlaceVC: UITableViewController {
             view.endEditing(true)
         }
     }
+
+    func saveNewPlace() {
+        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: placeImage.image)
+    }
+
 }
 
     // MARK: - Text field delegqte
@@ -45,6 +71,14 @@ extension NewPlaceVC: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+
+    @objc private func textFieldChanged() {
+        if placeName.text?.isEmpty == false {
+            saveButton.isEnabled = true
+        } else {
+            saveButton.isEnabled = false
+        }
     }
 }
 // MARK: - Work with image

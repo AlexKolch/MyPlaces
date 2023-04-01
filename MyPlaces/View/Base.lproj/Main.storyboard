@@ -12,7 +12,7 @@
         <!--My Places-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MyPlaces" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MyPlaces" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="ViewController">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -115,7 +115,7 @@
         <!--New Place-->
         <scene sceneID="5mI-ie-50T">
             <objects>
-                <tableViewController storyboardIdentifier="newPlaceVC" modalPresentationStyle="fullScreen" id="w4g-XB-Iff" customClass="NewPlaceVC" customModule="MyPlaces" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="newPlaceVC" modalPresentationStyle="fullScreen" id="w4g-XB-Iff" customClass="NewPlaceVC" customModule="MyPlaces" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="c6E-9p-6gI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -267,8 +267,19 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="New Place" id="DKw-YU-auR">
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="w9b-WP-P6r"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="w9b-WP-P6r">
+                            <connections>
+                                <action selector="tappedSave:" destination="w4g-XB-Iff" id="GNH-cS-GhK"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="placeImage" destination="LdB-RK-TI2" id="hNW-61-OAs"/>
+                        <outlet property="placeLocation" destination="Lbp-HS-XSU" id="ru4-K3-Kg3"/>
+                        <outlet property="placeName" destination="to4-EL-DBV" id="U76-tB-ecz"/>
+                        <outlet property="placeType" destination="e6s-Fk-Imq" id="hbI-75-uJM"/>
+                        <outlet property="saveButton" destination="w9b-WP-P6r" id="91J-dI-XDK"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yv1-2b-Z2R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
