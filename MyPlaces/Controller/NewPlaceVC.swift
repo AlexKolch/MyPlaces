@@ -33,6 +33,7 @@ class NewPlaceVC: UITableViewController {
         saveNewPlace()
         let vc = ViewController()
         vc.places.append(newPlace!)
+
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -74,8 +75,8 @@ class NewPlaceVC: UITableViewController {
 
 }
 
-    // MARK: - Text field delegqte
-extension NewPlaceVC: UITextFieldDelegate {
+    // MARK: - TextField delegqte
+extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
 //скрываем клавиатуру при нажатии Done
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -90,15 +91,23 @@ extension NewPlaceVC: UITextFieldDelegate {
         }
     }
 }
-// MARK: - Work with image
-extension NewPlaceVC {
+// MARK: - UIImagePickerController
+extension NewPlaceVC: UIImagePickerControllerDelegate {
 
     func chooseImagePicker(source: UIImagePickerController.SourceType) {
         if UIImagePickerController.isSourceTypeAvailable(source) {
             let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
             imagePicker.allowsEditing = true
             imagePicker.sourceType = source
             present(imagePicker, animated: true)
         }
+    }
+//присваеваем картинку в placeImage
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        placeImage.image = info[.editedImage] as? UIImage
+        placeImage.contentMode = .scaleAspectFill
+        placeImage.clipsToBounds = true
+        dismiss(animated: true)
     }
 }

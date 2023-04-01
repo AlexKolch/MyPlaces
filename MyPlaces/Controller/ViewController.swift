@@ -21,10 +21,6 @@ class ViewController: UIViewController {
                self.navigationController?.pushViewController(vc, animated: true)
     }
 
-
-
-
-
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
@@ -38,7 +34,12 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         cell.locationLabel.text = places[indexPath.row].location
         cell.typeLabel.text = places[indexPath.row].type
 
-        cell.imageOfPlaces.image = UIImage(named: places[indexPath.row].restaurantImage!)
+        if places[indexPath.row].image == nil {
+            cell.imageOfPlaces.image = UIImage(named: places[indexPath.row].restaurantImage!)
+        } else {
+            cell.imageOfPlaces.image = places[indexPath.row].image
+        }
+
         cell.imageOfPlaces.layer.cornerRadius = cell.imageOfPlaces.frame.size.height / 2
         cell.imageOfPlaces.clipsToBounds = true
 
