@@ -9,7 +9,7 @@ import UIKit
 
 class NewPlaceVC: UITableViewController {
 
-    var newPlace: Place!
+    var newPlace = Place()
 
     var closure: ((Place) -> ())?
 
@@ -27,6 +27,10 @@ class NewPlaceVC: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        DispatchQueue.main.async {
+            self.newPlace.savePlaces()
+        }
         //убрать разлиновку с пустыми ячейками
         tableView.tableFooterView = UIView()
         saveButton.isEnabled = false
@@ -47,7 +51,7 @@ class NewPlaceVC: UITableViewController {
             image = #imageLiteral(resourceName: "imagePlaceholder")
         }
 
-        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: image)
+      //  newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: image)
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {

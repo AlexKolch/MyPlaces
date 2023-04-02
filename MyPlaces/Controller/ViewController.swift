@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var placesArray = Place.getPlaces()
+   // var placesArray = Place.getPlaces()
 
     @IBOutlet weak var myTableView: UITableView!
 
@@ -23,7 +23,7 @@ class ViewController: UIViewController {
                self.navigationController?.pushViewController(vc, animated: true)
         //передача инф
         vc.closure = { [unowned self] place in
-            self.placesArray.append(place)
+           // self.placesArray.append(place)
             self.myTableView.reloadData()
         }
     }
@@ -43,27 +43,27 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return placesArray.count
-    }
+//extension ViewController: UITableViewDataSource, UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return placesArray.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell
+//        cell.nameLabel.text = placesArray[indexPath.row].name
+//        cell.locationLabel.text = placesArray[indexPath.row].location
+//        cell.typeLabel.text = placesArray[indexPath.row].type
+//
+//        if placesArray[indexPath.row].image == nil {
+//            cell.imageOfPlaces.image = UIImage(named: placesArray[indexPath.row].restaurantImage!)
+//        } else {
+//            cell.imageOfPlaces.image = placesArray[indexPath.row].image
+//        }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell
-        cell.nameLabel.text = placesArray[indexPath.row].name
-        cell.locationLabel.text = placesArray[indexPath.row].location
-        cell.typeLabel.text = placesArray[indexPath.row].type
-
-        if placesArray[indexPath.row].image == nil {
-            cell.imageOfPlaces.image = UIImage(named: placesArray[indexPath.row].restaurantImage!)
-        } else {
-            cell.imageOfPlaces.image = placesArray[indexPath.row].image
-        }
-
-        cell.imageOfPlaces.layer.cornerRadius = cell.imageOfPlaces.frame.size.height / 2
-        cell.imageOfPlaces.clipsToBounds = true
-
-        return cell
-    }
-}
+//        cell.imageOfPlaces.layer.cornerRadius = cell.imageOfPlaces.frame.size.height / 2
+//        cell.imageOfPlaces.clipsToBounds = true
+//
+//        return cell
+//    }
+//}
 
