@@ -8,8 +8,12 @@
 import UIKit
 
 class NewPlaceVC: UITableViewController {
-    var newPlace: Place?
 
+    var newPlace: Place!
+
+    var closure: ((Place) -> ())?
+
+    var imageIsChanged = false //установлена картинка кастомная или по дефолту
 
     @IBOutlet var placeImage: UIImageView!
 
@@ -29,10 +33,26 @@ class NewPlaceVC: UITableViewController {
         placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+    }
+
+    func saveNewPlace() {
+        var image: UIImage?
+
+        if imageIsChanged {
+            image = placeImage.image
+        } else {
+            image = #imageLiteral(resourceName: "imagePlaceholder")
+        }
+
+        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: image)
+    }
+
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
         saveNewPlace()
-        let vc = ViewController()
-        vc.places.append(newPlace!)
+        closure?(newPlace)
 
         self.navigationController?.popViewController(animated: true)
     }
@@ -69,10 +89,6 @@ class NewPlaceVC: UITableViewController {
         }
     }
 
-    func saveNewPlace() {
-        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: placeImage.image)
-    }
-
 }
 
     // MARK: - TextField delegqte
@@ -103,11 +119,14 @@ extension NewPlaceVC: UIImagePickerControllerDelegate {
             present(imagePicker, animated: true)
         }
     }
-//присваеваем картинку в placeImage
+    //присваеваем картинку в placeImage
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         placeImage.image = info[.editedImage] as? UIImage
         placeImage.contentMode = .scaleAspectFill
         placeImage.clipsToBounds = true
+
+        imageIsChanged = true
+
         dismiss(animated: true)
     }
 }
