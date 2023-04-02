@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var placesArray = Place.getPlaces()
+   // var placesArray = Place.getPlaces()
 
     @IBOutlet weak var myTableView: UITableView!
 
@@ -23,42 +23,30 @@ class ViewController: UIViewController {
                self.navigationController?.pushViewController(vc, animated: true)
         //передача инф
         vc.closure = { [unowned self] place in
-            self.placesArray.append(place)
+          //  self.placesArray.append(place)
             self.myTableView.reloadData()
         }
     }
-
-//    func saveData() {
-//        UserDefaults.standard.set(placesArray, forKey: "placesKey")
-//        UserDefaults.standard.synchronize()
-//    }
-//
-//    func loadData() {
-//        if let array = UserDefaults.standard.array(forKey: "placesKey") as? [Place] {
-//            placesArray = array
-//        } else {
-//            placesArray = Place.getPlaces()
-//        }
-//    }
 
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return placesArray.count
+       // return placesArray.count
+        return 100
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell
-        cell.nameLabel.text = placesArray[indexPath.row].name
-        cell.locationLabel.text = placesArray[indexPath.row].location
-        cell.typeLabel.text = placesArray[indexPath.row].type
+//        cell.nameLabel.text = placesArray[indexPath.row].name
+//        cell.locationLabel.text = placesArray[indexPath.row].location
+//        cell.typeLabel.text = placesArray[indexPath.row].type
 
-        if placesArray[indexPath.row].image == nil {
-            cell.imageOfPlaces.image = UIImage(named: placesArray[indexPath.row].restaurantImage!)
-        } else {
-            cell.imageOfPlaces.image = placesArray[indexPath.row].image
-        }
+//        if placesArray[indexPath.row].image == nil {
+//            cell.imageOfPlaces.image = UIImage(named: placesArray[indexPath.row].restaurantImage!)
+//        } else {
+//            cell.imageOfPlaces.image = placesArray[indexPath.row].image
+//        }
 
         cell.imageOfPlaces.layer.cornerRadius = cell.imageOfPlaces.frame.size.height / 2
         cell.imageOfPlaces.clipsToBounds = true

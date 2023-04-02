@@ -9,7 +9,7 @@ import UIKit
 
 class NewPlaceVC: UITableViewController {
 
-    var newPlace: Place!
+    var newPlace = Place()
 
     var closure: ((Place) -> ())?
 
@@ -27,16 +27,16 @@ class NewPlaceVC: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        DispatchQueue.main.async {
+            self.newPlace.savePlaces()
+//            print(realm.configuration.fileURL?.absoluteString)
+        }
         //убрать разлиновку с пустыми ячейками
         tableView.tableFooterView = UIView()
         saveButton.isEnabled = false
         placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-    }
 
     func saveNewPlace() {
         var image: UIImage?
@@ -47,7 +47,7 @@ class NewPlaceVC: UITableViewController {
             image = #imageLiteral(resourceName: "imagePlaceholder")
         }
 
-        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: image)
+//        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: image)
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
