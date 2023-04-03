@@ -11,7 +11,9 @@
 		FC2DE40829D7738C006FF582 /* NewPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2DE40729D7738C006FF582 /* NewPlaceVC.swift */; };
 		FC511C6729D9B60F0070F251 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = FC511C6629D9B60F0070F251 /* Realm */; };
 		FC511C6929D9B60F0070F251 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FC511C6829D9B60F0070F251 /* RealmSwift */; };
+
 		FC511C6D29D9EF630070F251 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC511C6C29D9EF630070F251 /* StorageManager.swift */; };
+
 		FC6B560D29D5FF6100C6EE29 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6B560C29D5FF6100C6EE29 /* AppDelegate.swift */; };
 		FC6B560F29D5FF6100C6EE29 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6B560E29D5FF6100C6EE29 /* SceneDelegate.swift */; };
 		FC6B561129D5FF6100C6EE29 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6B561029D5FF6100C6EE29 /* ViewController.swift */; };
