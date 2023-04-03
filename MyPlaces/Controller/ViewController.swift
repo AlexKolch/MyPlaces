@@ -31,10 +31,11 @@ class ViewController: UIViewController {
 
     @IBAction func addPlace(_ sender: Any) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
-               self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.pushViewController(vc, animated: true)
         //передача инф
         vc.closure = { [unowned self] _ in
-           // placesArray = realm.objects(Place.self)
+            // placesArray = realm.objects(Place.self)
             self.myTableView.reloadData()
         }
     }
@@ -70,6 +71,16 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         if editingStyle == .delete {
             StorageManager.deleteObject(place)
             tableView.reloadData()
+        }
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetail" {
+            guard let indexPath = myTableView.indexPathForSelectedRow else {return} //берем индекс выделенной ячейки
+            let place = placesArray[indexPath.row] //получаем объект по этому индексу
+            let newPlaceVC = segue.destination as! NewPlaceVC
+            newPlaceVC.currentPlace = place //присваеваем полученный объект во временную переменную
+            navigationController?.navigationBar.prefersLargeTitles = true
         }
     }
 }

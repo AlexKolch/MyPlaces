@@ -9,6 +9,8 @@ import UIKit
 
 class NewPlaceVC: UITableViewController {
 
+    var currentPlace: Place?
+
     var closure: ((Place) -> ())?
 
     var imageIsChanged = false //установлена картинка кастомная или по дефолту
@@ -29,6 +31,7 @@ class NewPlaceVC: UITableViewController {
         tableView.tableFooterView = UIView()
         saveButton.isEnabled = false
         placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        setupEditScreen()
     }
 
 
@@ -87,7 +90,22 @@ class NewPlaceVC: UITableViewController {
             view.endEditing(true)
         }
     }
-
+//настройка окна редактирования
+    private func setupEditScreen() {
+        if currentPlace != nil {
+            setupNavigationBar()
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
+            placeImage.image = image
+            placeImage.contentMode = .scaleAspectFill
+            placeName.text = currentPlace?.name
+            placeLocation.text = currentPlace?.location
+            placeType.text = currentPlace?.type
+        }
+    }
+    private func setupNavigationBar(){
+        title = currentPlace?.name
+        saveButton.isEnabled = true
+    }
 }
 
     // MARK: - TextField delegqte
