@@ -7,16 +7,21 @@
 
 import RealmSwift
 
+let realm = try! Realm()
+
 class StorageManager {
-    static let shared = StorageManager()
-    private init() {}
+//    static let shared = StorageManager()
+//    private init() {}
 
-    let realm = try! Realm()
-
-     func saveObject(_ place: Place) {
+   static func saveObject(_ place: Place) {
         try! realm.write {
             realm.add(place)
-            print(realm.configuration.fileURL?.absoluteString)
+        }
+    }
+
+    static func deleteObject(_ place: Place) {
+        try! realm.write {
+            realm.delete(place)
         }
     }
 }

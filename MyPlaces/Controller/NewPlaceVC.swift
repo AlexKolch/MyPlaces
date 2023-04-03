@@ -9,8 +9,6 @@ import UIKit
 
 class NewPlaceVC: UITableViewController {
 
-    var newPlace = Place()
-
     var closure: ((Place) -> ())?
 
     var imageIsChanged = false //установлена картинка кастомная или по дефолту
@@ -27,10 +25,6 @@ class NewPlaceVC: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.main.async {
-            self.newPlace.savePlaces()
-//            print(realm.configuration.fileURL?.absoluteString)
-        }
         //убрать разлиновку с пустыми ячейками
         tableView.tableFooterView = UIView()
         saveButton.isEnabled = false
@@ -46,13 +40,18 @@ class NewPlaceVC: UITableViewController {
         } else {
             image = #imageLiteral(resourceName: "imagePlaceholder")
         }
+        //конверт UIImage в Data
+        let imageData = image?.pngData()
 
-//        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: image)
+        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData)
+
+        closure?(newPlace)
+
+        StorageManager.saveObject(newPlace)
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
         saveNewPlace()
-        closure?(newPlace)
 
         self.navigationController?.popViewController(animated: true)
     }
