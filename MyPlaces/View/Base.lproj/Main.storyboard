@@ -82,6 +82,7 @@
                                             <outlet property="locationLabel" destination="qhB-l8-lvI" id="7K8-sx-7RH"/>
                                             <outlet property="nameLabel" destination="M0b-7q-9TZ" id="VQj-FA-Jh2"/>
                                             <outlet property="typeLabel" destination="3c0-f0-rSn" id="22b-U4-YIh"/>
+                                            <segue destination="w4g-XB-Iff" kind="show" identifier="showDetail" id="0EU-5H-vjB"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -99,7 +100,7 @@
                             <constraint firstItem="316-GF-i0d" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="pE6-fN-L7G"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="My Places" id="5QG-nx-opa">
+                    <navigationItem key="navigationItem" title="My Places" largeTitleDisplayMode="never" id="5QG-nx-opa">
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="lKi-QY-Bax"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Mx9-4U-fML">
                             <connections>
@@ -269,7 +270,7 @@
                             <outlet property="delegate" destination="w4g-XB-Iff" id="9p3-Ut-eu4"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="New Place" id="DKw-YU-auR">
+                    <navigationItem key="navigationItem" title="New Place" largeTitleDisplayMode="always" id="DKw-YU-auR">
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="w9b-WP-P6r">
                             <connections>
                                 <action selector="tappedSave:" destination="w4g-XB-Iff" id="GNH-cS-GhK"/>
@@ -293,11 +294,11 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ofb-Zu-Sqg" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="uVF-Ky-Li7">
-                        <rect key="frame" x="0.0" y="47" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="uVF-Ky-Li7">
+                        <rect key="frame" x="0.0" y="47" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
-                            <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="24"/>
+                            <fontDescription key="fontDescription" name="SnellRoundhand-Bold" family="Snell Roundhand" pointSize="24"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </textAttributes>
                     </navigationBar>
