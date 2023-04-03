@@ -34,8 +34,7 @@ class NewPlaceVC: UITableViewController {
         setupEditScreen()
     }
 
-
-    func saveNewPlace() {
+    func savePlace() {
         var image: UIImage?
 
         if imageIsChanged {
@@ -43,19 +42,24 @@ class NewPlaceVC: UITableViewController {
         } else {
             image = #imageLiteral(resourceName: "imagePlaceholder")
         }
-        //конверт UIImage в Data
+        //конверт UIImage в Data и создаем новый объект
         let imageData = image?.pngData()
-
         let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData)
 
-        closure?(newPlace)
-
-        StorageManager.saveObject(newPlace)
+        if currentPlace != nil {
+            try! realm.write(){
+                currentPlace?.imageData = newPlace.imageData
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+            }
+        } else {
+            closure?(newPlace)
+        }
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
-        saveNewPlace()
-
+        savePlace()
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -90,10 +94,13 @@ class NewPlaceVC: UITableViewController {
             view.endEditing(true)
         }
     }
+
 //настройка окна редактирования
     private func setupEditScreen() {
         if currentPlace != nil {
             setupNavigationBar()
+            imageIsChanged = true
+
             guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
             placeImage.image = image
             placeImage.contentMode = .scaleAspectFill
@@ -102,7 +109,12 @@ class NewPlaceVC: UITableViewController {
             placeType.text = currentPlace?.type
         }
     }
+
     private func setupNavigationBar(){
+        //backBarButtonItem без заголовка
+        if let topItem = navigationController?.navigationBar.topItem {
+            topItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        }
         title = currentPlace?.name
         saveButton.isEnabled = true
     }

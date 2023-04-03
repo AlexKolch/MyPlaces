@@ -9,8 +9,8 @@ import UIKit
 import RealmSwift
 
 class ViewController: UIViewController {
-    let newPlaceVC = NewPlaceVC()
 
+    let newPlaceVC = NewPlaceVC()
     var placesArray: Results<Place>!
 
     @IBOutlet weak var myTableView: UITableView!
@@ -33,9 +33,9 @@ class ViewController: UIViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
         navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationController?.pushViewController(vc, animated: true)
-        //передача инф
-        vc.closure = { [unowned self] _ in
-            // placesArray = realm.objects(Place.self)
+
+        vc.closure = { [unowned self] newPlace in
+            StorageManager.saveObject(newPlace)
             self.myTableView.reloadData()
         }
     }

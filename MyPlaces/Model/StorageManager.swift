@@ -10,8 +10,6 @@ import RealmSwift
 let realm = try! Realm()
 
 class StorageManager {
-//    static let shared = StorageManager()
-//    private init() {}
 
    static func saveObject(_ place: Place) {
         try! realm.write {
