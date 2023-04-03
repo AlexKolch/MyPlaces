@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="316-GF-i0d">
-                                <rect key="frame" x="0.0" y="91" width="375" height="687"/>
+                                <rect key="frame" x="0.0" y="130" width="375" height="648"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="Mh2-HS-U5b" customClass="CustomTableViewCell" customModule="MyPlaces" customModuleProvider="target">
@@ -90,18 +90,29 @@
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="nmJ-rp-dCd"/>
                                 </connections>
                             </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Urz-fw-c04">
+                                <rect key="frame" x="16" y="91" width="343" height="32"/>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                </segments>
+                            </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="316-GF-i0d" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0gN-zD-XFW"/>
-                            <constraint firstItem="316-GF-i0d" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="fMe-CU-hua"/>
+                            <constraint firstItem="Urz-fw-c04" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="AO1-yK-owC"/>
+                            <constraint firstItem="Urz-fw-c04" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="dCG-Ib-eEI"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Urz-fw-c04" secondAttribute="trailing" constant="16" id="eVX-Du-mUh"/>
+                            <constraint firstItem="316-GF-i0d" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="39" id="fMe-CU-hua"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="316-GF-i0d" secondAttribute="trailing" id="no4-OD-vbA"/>
                             <constraint firstItem="316-GF-i0d" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="pE6-fN-L7G"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="My Places" largeTitleDisplayMode="never" id="5QG-nx-opa">
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="lKi-QY-Bax"/>
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="AZ" id="hFr-4M-ra4"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Mx9-4U-fML">
                             <connections>
                                 <action selector="addPlace:" destination="BYZ-38-t0r" id="jCd-4H-f7E"/>
@@ -114,7 +125,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1250" y="-28"/>
+            <point key="canvasLocation" x="1248.8" y="-28.078817733990149"/>
         </scene>
         <!--New Place-->
         <scene sceneID="5mI-ie-50T">
@@ -313,6 +324,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="AZ" width="25" height="24"/>
         <image name="Photo" width="194.66667175292969" height="195.66667175292969"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
