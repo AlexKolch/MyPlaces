@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     var placesArray: Results<Place>!
 
     @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var reversSortingButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,13 +23,6 @@ class ViewController: UIViewController {
         placesArray = realm.objects(Place.self)
     }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        newPlaceVC.closure = { [unowned self] _ in
-//            self.placesArray = realm.objects(Place.self)
-//            self.myTableView.reloadData()
-//        }
-//    }
 
     @IBAction func addPlace(_ sender: Any) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
@@ -38,6 +33,14 @@ class ViewController: UIViewController {
             StorageManager.saveObject(newPlace)
             self.myTableView.reloadData()
         }
+    }
+
+
+    @IBAction func sortSelection(_ sender: UISegmentedControl) {
+    }
+    
+
+    @IBAction func reversedSorting(_ sender: Any) {
     }
 }
 

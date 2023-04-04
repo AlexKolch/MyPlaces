@@ -93,9 +93,12 @@
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Urz-fw-c04">
                                 <rect key="frame" x="16" y="91" width="343" height="32"/>
                                 <segments>
-                                    <segment title="First"/>
-                                    <segment title="Second"/>
+                                    <segment title="Date"/>
+                                    <segment title="Name"/>
                                 </segments>
+                                <connections>
+                                    <action selector="sortSelection:" destination="BYZ-38-t0r" eventType="valueChanged" id="Gm0-hW-EzG"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -112,7 +115,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="My Places" largeTitleDisplayMode="never" id="5QG-nx-opa">
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="lKi-QY-Bax"/>
-                        <barButtonItem key="leftBarButtonItem" title="Item" image="AZ" id="hFr-4M-ra4"/>
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="AZ" id="hFr-4M-ra4">
+                            <connections>
+                                <action selector="reversedSorting:" destination="BYZ-38-t0r" id="Mg7-HW-Iy3"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Mx9-4U-fML">
                             <connections>
                                 <action selector="addPlace:" destination="BYZ-38-t0r" id="jCd-4H-f7E"/>
@@ -121,6 +128,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="myTableView" destination="316-GF-i0d" id="c2b-gM-VUT"/>
+                        <outlet property="reversSortingButton" destination="hFr-4M-ra4" id="Rqk-Hf-qj8"/>
+                        <outlet property="segmentedControl" destination="Urz-fw-c04" id="0tp-Ya-7mA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
