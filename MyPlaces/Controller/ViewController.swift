@@ -29,6 +29,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         placesArray = realm.objects(Place.self)    //загрузка из БД
 
         searchController.searchResultsUpdater = self //получатель инф об изменении поисковой строки наш класс
@@ -37,7 +38,6 @@ class ViewController: UIViewController {
         navigationItem.searchController = searchController //строку поиска интегрирована в нав бар
         definesPresentationContext = true //отпускает сроку поиска при переходе на другой экран
     }
-
 
     @IBAction func addPlace(_ sender: Any) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
@@ -74,12 +74,12 @@ class ViewController: UIViewController {
         }
         myTableView.reloadData()
     }
-
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
         if isFiltering {
            return filteredPlaces.count
         }
@@ -88,6 +88,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell
+
 
         var place = Place()
 
