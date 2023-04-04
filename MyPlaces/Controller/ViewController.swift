@@ -12,8 +12,11 @@ class ViewController: UIViewController {
 
     let newPlaceVC = NewPlaceVC()
     var placesArray: Results<Place>!
+    var ascendngSorting = true //cортировка по возрастанию
 
     @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var reversSortingButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,13 +24,6 @@ class ViewController: UIViewController {
         placesArray = realm.objects(Place.self)
     }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        newPlaceVC.closure = { [unowned self] _ in
-//            self.placesArray = realm.objects(Place.self)
-//            self.myTableView.reloadData()
-//        }
-//    }
 
     @IBAction func addPlace(_ sender: Any) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
@@ -39,6 +35,32 @@ class ViewController: UIViewController {
             self.myTableView.reloadData()
         }
     }
+
+
+    @IBAction func sortSelection(_ sender: UISegmentedControl) {
+      sorting()
+    }
+
+    @IBAction func reversedSorting(_ sender: Any) {
+        ascendngSorting.toggle()
+
+        if ascendngSorting {
+            reversSortingButton.image = #imageLiteral(resourceName: "AZ")
+        } else {
+            reversSortingButton.image = #imageLiteral(resourceName: "ZA")
+        }
+        sorting()
+    }
+
+    private func sorting(){
+        if segmentedControl.selectedSegmentIndex == 0 {
+            placesArray = placesArray.sorted(byKeyPath: "date", ascending: ascendngSorting)
+        } else {
+            placesArray = placesArray.sorted(byKeyPath: "name", ascending: ascendngSorting)
+        }
+        myTableView.reloadData()
+    }
+
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
