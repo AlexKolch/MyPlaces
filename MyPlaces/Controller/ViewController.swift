@@ -10,24 +10,34 @@ import RealmSwift
 
 class ViewController: UIViewController {
 
-    let newPlaceVC = NewPlaceVC()
-    var placesArray: Results<Place>!
+    private let searchController = UISearchController(searchResultsController: nil)
+    private let newPlaceVC = NewPlaceVC()
+    private var placesArray: Results<Place>!
+    private var filteredPlaces: Results<Place>!
+    private var ascendngSorting = true //cортировка по возрастанию
+    private var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else { return false }
+        return text.isEmpty
+    }
+    private var isFiltering: Bool {
+        return searchController.isActive && !searchBarIsEmpty
+    }
 
     @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var reversSortingButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //загрузка из БД
-        placesArray = realm.objects(Place.self)
-    }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        newPlaceVC.closure = { [unowned self] _ in
-//            self.placesArray = realm.objects(Place.self)
-//            self.myTableView.reloadData()
-//        }
-//    }
+        placesArray = realm.objects(Place.self)    //загрузка из БД
+
+        searchController.searchResultsUpdater = self //получатель инф об изменении поисковой строки наш класс
+        searchController.obscuresBackgroundDuringPresentation = false //позволяет взаимодействовать с отображаемым контентом
+        searchController.searchBar.placeholder = "Search"
+        navigationItem.searchController = searchController //строку поиска интегрирована в нав бар
+        definesPresentationContext = true //отпускает сроку поиска при переходе на другой экран
+    }
 
     @IBAction func addPlace(_ sender: Any) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
@@ -39,18 +49,54 @@ class ViewController: UIViewController {
             self.myTableView.reloadData()
         }
     }
+
+    @IBAction func sortSelection(_ sender: UISegmentedControl) {
+      sorting()
+    }
+
+    @IBAction func reversedSorting(_ sender: Any) {
+        ascendngSorting.toggle()
+
+        if ascendngSorting {
+            reversSortingButton.image = #imageLiteral(resourceName: "AZ")
+        } else {
+            reversSortingButton.image = #imageLiteral(resourceName: "ZA")
+        }
+
+        sorting()
+    }
+
+    private func sorting(){
+        if segmentedControl.selectedSegmentIndex == 0 {
+            placesArray = placesArray.sorted(byKeyPath: "date", ascending: ascendngSorting)
+        } else {
+            placesArray = placesArray.sorted(byKeyPath: "name", ascending: ascendngSorting)
+        }
+        myTableView.reloadData()
+    }
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        if isFiltering {
+           return filteredPlaces.count
+        }
         return placesArray.isEmpty ? 0 : placesArray.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell
 
-        let place = placesArray[indexPath.row]
+
+        var place = Place()
+
+        if isFiltering {
+            place = filteredPlaces[indexPath.row]
+        } else {
+            place = placesArray[indexPath.row]
+        }
 
         cell.nameLabel.text = place.name
         cell.locationLabel.text = place.location
@@ -77,11 +123,32 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             guard let indexPath = myTableView.indexPathForSelectedRow else {return} //берем индекс выделенной ячейки
-            let place = placesArray[indexPath.row] //получаем объект по этому индексу
+
+            let place: Place
+            //делаем правильное отображение NewPlaceVC при фильтрации
+            if isFiltering {
+                place = filteredPlaces[indexPath.row]
+            } else {
+                place = placesArray[indexPath.row]
+            }
+
             let newPlaceVC = segue.destination as! NewPlaceVC
             newPlaceVC.currentPlace = place //присваеваем полученный объект во временную переменную
             navigationController?.navigationBar.prefersLargeTitles = true
         }
+    }
+}
+
+extension ViewController: UISearchResultsUpdating {
+
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
+    }
+
+//метод фильтрации контента
+    private func filterContentForSearchText(_ searchText: String) {
+        filteredPlaces = placesArray.filter("name CONTAINS[c] %@ OR location CONTAINS[c] %@", searchText, searchText)
+        myTableView.reloadData()
     }
 }
 
