@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     let newPlaceVC = NewPlaceVC()
     var placesArray: Results<Place>!
+    var ascendngSorting = true //cортировка по возрастанию
 
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -37,11 +38,29 @@ class ViewController: UIViewController {
 
 
     @IBAction func sortSelection(_ sender: UISegmentedControl) {
+      sorting()
     }
-    
 
     @IBAction func reversedSorting(_ sender: Any) {
+        ascendngSorting.toggle()
+
+        if ascendngSorting {
+            reversSortingButton.image = #imageLiteral(resourceName: "AZ")
+        } else {
+            reversSortingButton.image = #imageLiteral(resourceName: "ZA")
+        }
+        sorting()
     }
+
+    private func sorting(){
+        if segmentedControl.selectedSegmentIndex == 0 {
+            placesArray = placesArray.sorted(byKeyPath: "date", ascending: ascendngSorting)
+        } else {
+            placesArray = placesArray.sorted(byKeyPath: "name", ascending: ascendngSorting)
+        }
+        myTableView.reloadData()
+    }
+
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
