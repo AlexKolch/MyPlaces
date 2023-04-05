@@ -9,7 +9,7 @@ import UIKit
 
 class NewPlaceVC: UITableViewController {
 
-    var currentPlace: Place?
+    var currentPlace: Place!
 
     var closure: ((Place) -> ())?
 
@@ -20,11 +20,15 @@ class NewPlaceVC: UITableViewController {
     @IBOutlet var placeLocation: UITextField!
     @IBOutlet var placeType: UITextField!
     @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var ratingControl: RaitingControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         //убрать разлиновку с пустыми ячейками
-        tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0,
+                                                         y: 0,
+                                                         width: tableView.frame.size.width,
+                                                         height: 1))
         saveButton.isEnabled = false
         placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
         setupEditScreen()
@@ -40,7 +44,7 @@ class NewPlaceVC: UITableViewController {
         }
         //конверт UIImage в Data и создаем новый объект
         let imageData = image?.pngData()
-        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData)
+        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: Double(ratingControl.rating))
 
         if currentPlace != nil {
             try! realm.write(){
@@ -48,6 +52,7 @@ class NewPlaceVC: UITableViewController {
                 currentPlace?.name = newPlace.name
                 currentPlace?.location = newPlace.location
                 currentPlace?.type = newPlace.type
+                currentPlace?.rating = newPlace.rating
             }
         } else {
             closure?(newPlace)
@@ -98,11 +103,13 @@ class NewPlaceVC: UITableViewController {
             imageIsChanged = true
 
             guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
+
             placeImage.image = image
             placeImage.contentMode = .scaleAspectFill
             placeName.text = currentPlace?.name
             placeLocation.text = currentPlace?.location
             placeType.text = currentPlace?.type
+            ratingControl.rating = Int(currentPlace.rating)
         }
     }
 

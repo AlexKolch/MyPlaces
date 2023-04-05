@@ -18,7 +18,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="316-GF-i0d">
-                                <rect key="frame" x="0.0" y="130" width="375" height="648"/>
+
+                                <rect key="frame" x="0.0" y="130" width="375" height="682"/>
+
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="Mh2-HS-U5b" customClass="CustomTableViewCell" customModule="MyPlaces" customModuleProvider="target">
@@ -110,7 +112,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Urz-fw-c04" secondAttribute="trailing" constant="16" id="eVX-Du-mUh"/>
                             <constraint firstItem="316-GF-i0d" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="39" id="fMe-CU-hua"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="316-GF-i0d" secondAttribute="trailing" id="no4-OD-vbA"/>
-                            <constraint firstItem="316-GF-i0d" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="pE6-fN-L7G"/>
+                            <constraint firstItem="316-GF-i0d" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="pE6-fN-L7G"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="My Places" largeTitleDisplayMode="never" id="5QG-nx-opa">
@@ -282,6 +284,23 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="140" id="3SF-AD-Ut6">
+                                        <rect key="frame" x="0.0" y="525" width="375" height="140"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3SF-AD-Ut6" id="pq3-06-Cre">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="110" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3qb-yH-Jf4" customClass="RaitingControl" customModule="MyPlaces" customModuleProvider="target">
+                                                    <rect key="frame" x="87.666666666666686" y="15" width="200" height="110"/>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="3qb-yH-Jf4" firstAttribute="centerY" secondItem="pq3-06-Cre" secondAttribute="centerY" id="5Yh-OF-ogD"/>
+                                                <constraint firstItem="3qb-yH-Jf4" firstAttribute="centerX" secondItem="pq3-06-Cre" secondAttribute="centerX" id="CSN-Uc-ZJ5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -302,6 +321,7 @@
                         <outlet property="placeLocation" destination="Lbp-HS-XSU" id="ru4-K3-Kg3"/>
                         <outlet property="placeName" destination="to4-EL-DBV" id="U76-tB-ecz"/>
                         <outlet property="placeType" destination="e6s-Fk-Imq" id="hbI-75-uJM"/>
+                        <outlet property="ratingControl" destination="3qb-yH-Jf4" id="SiQ-e4-ouy"/>
                         <outlet property="saveButton" destination="w9b-WP-P6r" id="91J-dI-XDK"/>
                     </connections>
                 </tableViewController>
