@@ -17,7 +17,7 @@ class RaitingControl: UIStackView {
         }
     }
 
-    var starSize = CGSize(width: 44, height: 44) 
+    var starSize = CGSize(width: 44, height: 44)
 
     var starCount = 5
 
@@ -57,6 +57,7 @@ class RaitingControl: UIStackView {
 //create buttons
         for _ in 0..<starCount {
             let button = UIButton()
+//set the button image
             button.setImage(emptyStar, for: .normal)
             button.setImage(filledStar, for: .selected)
             button.setImage(highlighterStar, for: .highlighted)
@@ -73,7 +74,7 @@ class RaitingControl: UIStackView {
             ratingButtonsArray.append(button)
         }
     }
-
+//логика отображения звезд рейтинга!
     private func updateSelectedButtonImage() {
         for (index, button) in ratingButtonsArray.enumerated() {
             button.isSelected = index < rating
