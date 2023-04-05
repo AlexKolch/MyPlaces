@@ -45,7 +45,6 @@ class RaitingControl: UIStackView {
         } else {
             rating = selectedRating
         }
-
     }
 
     private func setupButtons() {
