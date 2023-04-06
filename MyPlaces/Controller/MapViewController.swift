@@ -11,12 +11,14 @@ import MapKit
 class MapViewController: UIViewController {
 
     var place: Place! //передаем сюда place из других vc
+    let annotationID = "annotationID"
 
     @IBOutlet weak var mapView: MKMapView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       setupPlacemark()
+        mapView.delegate = self
+        setupPlacemark()
     }
     
 
@@ -49,5 +51,30 @@ class MapViewController: UIViewController {
             self.mapView.showAnnotations([annotation], animated: true) //видимая область для аннотаций
             self.mapView.selectAnnotation(annotation, animated: true ) //выделяет маркер крупно
         }
+    }
+}
+
+extension MapViewController: MKMapViewDelegate {
+
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+
+        guard !(annotation is MKUserLocation) else {return nil}
+
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationID) as? MKMarkerAnnotationView
+
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: annotationID)
+            annotationView?.canShowCallout = true //банер
+        }
+
+        if let imageData = place.imageData {
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+            imageView.layer.cornerRadius = 10
+            imageView.clipsToBounds = true
+            imageView.image = UIImage(data: imageData)
+
+            annotationView?.rightCalloutAccessoryView = imageView //отображение картинки в баннере
+        }
+        return annotationView
     }
 }
