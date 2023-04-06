@@ -37,7 +37,7 @@ class NewPlaceVC: UITableViewController {
         setupStars()
     }
     // MARK: - Method
-    func setupStars(){
+    func setupStars() {
         cosmosView.settings.starSize = 40
         cosmosView.settings.emptyBorderWidth = 2.5
         cosmosView.settings.starMargin = 7
@@ -72,6 +72,15 @@ class NewPlaceVC: UITableViewController {
         } else {
             closure?(newPlace)
         }
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier != "showMap" {
+            return
+        }
+
+        let mapVC = segue.destination as! MapViewController
+        mapVC.place = currentPlace //передаем в нашу переменную текущее место
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
