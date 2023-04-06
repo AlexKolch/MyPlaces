@@ -6,14 +6,14 @@
 //
 
 import UIKit
+import Cosmos
 
 class NewPlaceVC: UITableViewController {
-
+    // MARK: - Properties
     var currentPlace: Place!
-
     var closure: ((Place) -> ())?
-
     var imageIsChanged = false //установлена картинка кастомная или по дефолту
+    var currentRating = 0.0
 
     @IBOutlet var placeImage: UIImageView!
     @IBOutlet var placeName: UITextField!
@@ -21,7 +21,9 @@ class NewPlaceVC: UITableViewController {
     @IBOutlet var placeType: UITextField!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var ratingControl: RaitingControl!
+    @IBOutlet weak var cosmosView: CosmosView!
 
+    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         //убрать разлиновку с пустыми ячейками
@@ -32,6 +34,19 @@ class NewPlaceVC: UITableViewController {
         saveButton.isEnabled = false
         placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
         setupEditScreen()
+        setupStars()
+    }
+    // MARK: - Method
+    func setupStars(){
+        cosmosView.settings.starSize = 40
+        cosmosView.settings.emptyBorderWidth = 2.5
+        cosmosView.settings.starMargin = 7
+        cosmosView.backgroundColor = .clear
+        cosmosView.settings.fillMode = .full
+
+        cosmosView.didTouchCosmos = { rating in
+            self.currentRating = rating
+        }
     }
 
     func savePlace() {
@@ -44,7 +59,7 @@ class NewPlaceVC: UITableViewController {
         }
         //конверт UIImage в Data и создаем новый объект
         let imageData = image?.pngData()
-        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: Double(ratingControl.rating))
+        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: currentRating)
 
         if currentPlace != nil {
             try! realm.write(){
@@ -109,7 +124,7 @@ class NewPlaceVC: UITableViewController {
             placeName.text = currentPlace?.name
             placeLocation.text = currentPlace?.location
             placeType.text = currentPlace?.type
-            ratingControl.rating = Int(currentPlace.rating)
+            cosmosView.rating = currentPlace.rating
         }
     }
 
@@ -123,7 +138,7 @@ class NewPlaceVC: UITableViewController {
     }
 }
 
-    // MARK: - TextField delegqte
+    // MARK: - TextField delegate
 extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
 //скрываем клавиатуру при нажатии Done
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

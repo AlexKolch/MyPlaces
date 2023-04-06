@@ -7,9 +7,10 @@
 
 import UIKit
 import RealmSwift
+import Cosmos
 
 class ViewController: UIViewController {
-
+    // MARK: - Properties
     private let searchController = UISearchController(searchResultsController: nil)
     private let newPlaceVC = NewPlaceVC()
     private var placesArray: Results<Place>!
@@ -26,7 +27,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var reversSortingButton: UIBarButtonItem!
-
+    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -39,14 +40,18 @@ class ViewController: UIViewController {
         definesPresentationContext = true //отпускает сроку поиска при переходе на другой экран
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        myTableView.reloadData()
+    }
+    // MARK: - Method
     @IBAction func addPlace(_ sender: Any) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
         navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationController?.pushViewController(vc, animated: true)
 
-        vc.closure = { [unowned self] newPlace in
+        vc.closure = { newPlace in
             StorageManager.saveObject(newPlace)
-            self.myTableView.reloadData()
         }
     }
 
@@ -75,7 +80,7 @@ class ViewController: UIViewController {
         myTableView.reloadData()
     }
 }
-
+// MARK: - UITableViewDelegate
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -83,38 +88,35 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         if isFiltering {
            return filteredPlaces.count
         }
-        return placesArray.isEmpty ? 0 : placesArray.count
+        return placesArray.count
     }
+
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell
 
-
-        var place = Place()
-
-        if isFiltering {
-            place = filteredPlaces[indexPath.row]
-        } else {
-            place = placesArray[indexPath.row]
-        }
+        let place = isFiltering ? filteredPlaces[indexPath.row] : placesArray[indexPath.row]
 
         cell.nameLabel.text = place.name
         cell.locationLabel.text = place.location
         cell.typeLabel.text = place.type
         cell.imageOfPlaces.image = UIImage(data: place.imageData!)
-        cell.imageOfPlaces.layer.cornerRadius = cell.imageOfPlaces.frame.size.height / 2
-        cell.imageOfPlaces.clipsToBounds = true
+        cell.cosmosView.rating = place.rating
+        cell.configureCell()
 
         return cell
     }
+
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
+
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
+
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let place = placesArray[indexPath.row]
@@ -124,17 +126,13 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             guard let indexPath = myTableView.indexPathForSelectedRow else {return} //берем индекс выделенной ячейки
 
-            let place: Place
             //делаем правильное отображение NewPlaceVC при фильтрации
-            if isFiltering {
-                place = filteredPlaces[indexPath.row]
-            } else {
-                place = placesArray[indexPath.row]
-            }
+            let place = isFiltering ? filteredPlaces[indexPath.row] : placesArray[indexPath.row]
 
             let newPlaceVC = segue.destination as! NewPlaceVC
             newPlaceVC.currentPlace = place //присваеваем полученный объект во временную переменную
@@ -142,7 +140,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
-
+// MARK: - UISearchResultsUpdating
 extension ViewController: UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {

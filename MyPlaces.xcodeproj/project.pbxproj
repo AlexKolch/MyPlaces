@@ -62,7 +62,6 @@
 				9D30A378D4FF58485B54A8F7 /* Pods-MyPlaces.debug.xcconfig */,
 				52B7EDD2E730AA5465EB6E26 /* Pods-MyPlaces.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -194,7 +193,7 @@
 			);
 			mainGroup = FC6B560029D5FF6100C6EE29;
 			packageReferences = (
-				FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift.git" */,
+				FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = FC6B560A29D5FF6100C6EE29 /* Products */;
 			projectDirPath = "";
@@ -348,7 +347,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -402,7 +401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -502,7 +501,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift.git" */ = {
+		FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
 			requirement = {
@@ -515,12 +514,12 @@
 /* Begin XCSwiftPackageProductDependency section */
 		FC511C6629D9B60F0070F251 /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift.git" */;
+			package = FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = Realm;
 		};
 		FC511C6829D9B60F0070F251 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift.git" */;
+			package = FC511C6529D9B60F0070F251 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
