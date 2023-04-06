@@ -6,39 +6,50 @@
 //
 
 import UIKit
+import Cosmos
 
 class NewPlaceVC: UITableViewController {
-
-    var newPlace: Place!
-
+    // MARK: - Properties
+    var currentPlace: Place!
     var closure: ((Place) -> ())?
-
     var imageIsChanged = false //установлена картинка кастомная или по дефолту
+    var currentRating = 0.0
 
     @IBOutlet var placeImage: UIImageView!
-
     @IBOutlet var placeName: UITextField!
-
     @IBOutlet var placeLocation: UITextField!
-
     @IBOutlet var placeType: UITextField!
-
     @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var ratingControl: RaitingControl!
+    @IBOutlet weak var cosmosView: CosmosView!
 
+    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         //убрать разлиновку с пустыми ячейками
-        tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0,
+                                                         y: 0,
+                                                         width: tableView.frame.size.width,
+                                                         height: 1))
         saveButton.isEnabled = false
         placeName.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        setupEditScreen()
+        setupStars()
+    }
+    // MARK: - Method
+    func setupStars(){
+        cosmosView.settings.starSize = 40
+        cosmosView.settings.emptyBorderWidth = 2.5
+        cosmosView.settings.starMargin = 7
+        cosmosView.backgroundColor = .clear
+        cosmosView.settings.fillMode = .full
+
+        cosmosView.didTouchCosmos = { rating in
+            self.currentRating = rating
+        }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-    }
-
-    func saveNewPlace() {
+    func savePlace() {
         var image: UIImage?
 
         if imageIsChanged {
@@ -46,14 +57,25 @@ class NewPlaceVC: UITableViewController {
         } else {
             image = #imageLiteral(resourceName: "imagePlaceholder")
         }
+        //конверт UIImage в Data и создаем новый объект
+        let imageData = image?.pngData()
+        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: currentRating)
 
-        newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, image: image)
+        if currentPlace != nil {
+            try! realm.write(){
+                currentPlace?.imageData = newPlace.imageData
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+                currentPlace?.rating = newPlace.rating
+            }
+        } else {
+            closure?(newPlace)
+        }
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
-        saveNewPlace()
-        closure?(newPlace)
-
+        savePlace()
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -89,9 +111,34 @@ class NewPlaceVC: UITableViewController {
         }
     }
 
+//настройка окна редактирования
+    private func setupEditScreen() {
+        if currentPlace != nil {
+            setupNavigationBar()
+            imageIsChanged = true
+
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
+
+            placeImage.image = image
+            placeImage.contentMode = .scaleAspectFill
+            placeName.text = currentPlace?.name
+            placeLocation.text = currentPlace?.location
+            placeType.text = currentPlace?.type
+            cosmosView.rating = currentPlace.rating
+        }
+    }
+
+    private func setupNavigationBar(){
+        //backBarButtonItem без заголовка
+        if let topItem = navigationController?.navigationBar.topItem {
+            topItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        }
+        title = currentPlace?.name
+        saveButton.isEnabled = true
+    }
 }
 
-    // MARK: - TextField delegqte
+    // MARK: - TextField delegate
 extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
 //скрываем клавиатуру при нажатии Done
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

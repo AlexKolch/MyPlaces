@@ -5,26 +5,24 @@
 //  Created by Алексей Колыченков on 31.03.2023.
 //
 
-import UIKit
+import RealmSwift
+import SwiftUI
 
-struct Place {
+class Place: Object {
 
-    var name: String
-    var location: String?
-    var type: String?
-    var image: UIImage?
-    var restaurantImage: String?
-
-    static let restaurantNames = ["Балкан Гриль", "Бочка", "Вкусные истории", "Дастархан", "Индокитай", "Классик", "Шок", "Дастархан", "Bonsai", "Burger Heroes", "Kitchen", "Love&Life", "Morris Pub", "Sherlock Holmes", "Speak Easy"]
-
-//метод получения массива [Place] для отображения в cell
-    static func getPlaces() -> [Place] {
-        var places = [Place]()
-
-        for place in restaurantNames {
-            places.append(Place(name: place, location: "Санкт-Петербург", type: "Ресторан", restaurantImage: place))
-        }
-
-        return places
+    @Persisted var name: String
+    @Persisted var location: String?
+    @Persisted var type: String?
+    @Persisted var imageData: Data?
+    @Persisted var date: Date
+    @Persisted var rating = 0.0
+    
+    convenience init(name: String, location: String?, type: String?, imageData: Data?, rating: Double) {
+        self.init()
+        self.name = name
+        self.location = location
+        self.type = type
+        self.imageData = imageData
+        self.rating = rating
     }
 }
