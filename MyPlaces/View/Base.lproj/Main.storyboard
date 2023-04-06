@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -168,11 +169,25 @@
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Photo" translatesAutoresizingMaskIntoConstraints="NO" id="LdB-RK-TI2">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kWq-DT-xg3">
+                                                    <rect key="frame" x="305" y="189" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="9Nd-lC-sJY"/>
+                                                        <constraint firstAttribute="width" constant="50" id="obg-n7-6Qa"/>
+                                                    </constraints>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" image="map"/>
+                                                    <connections>
+                                                        <segue destination="eDU-jz-Zi8" kind="presentation" identifier="showMap" id="0NK-R5-WOC"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstItem="kWq-DT-xg3" firstAttribute="trailing" secondItem="jGD-vn-V9z" secondAttribute="trailingMargin" id="2kS-N6-W5d"/>
                                                 <constraint firstAttribute="bottom" secondItem="LdB-RK-TI2" secondAttribute="bottom" id="9KJ-E2-vQE"/>
                                                 <constraint firstItem="LdB-RK-TI2" firstAttribute="leading" secondItem="jGD-vn-V9z" secondAttribute="leading" id="J6i-Vd-ZJg"/>
+                                                <constraint firstItem="kWq-DT-xg3" firstAttribute="bottom" secondItem="jGD-vn-V9z" secondAttribute="bottomMargin" id="KNO-1O-6Ib"/>
                                                 <constraint firstItem="LdB-RK-TI2" firstAttribute="top" secondItem="jGD-vn-V9z" secondAttribute="top" id="LPd-Il-cJp"/>
                                                 <constraint firstAttribute="trailing" secondItem="LdB-RK-TI2" secondAttribute="trailing" id="MB1-iA-vtO"/>
                                             </constraints>
@@ -351,6 +366,48 @@
             </objects>
             <point key="canvasLocation" x="2036" y="-28.078817733990149"/>
         </scene>
+        <!--Map View Controller-->
+        <scene sceneID="2Qh-iW-9v1">
+            <objects>
+                <viewController id="eDU-jz-Zi8" customClass="MapViewController" customModule="MyPlaces" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xHz-qq-SwG">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="755"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q8h-hC-5An">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="755"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" placeholderIntrinsicWidth="40" placeholderIntrinsicHeight="40" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="close" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vpb-Np-qiL">
+                                <rect key="frame" x="310" y="58" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="SXe-mn-cS1"/>
+                                    <constraint firstAttribute="height" constant="40" id="bb4-KG-tEk"/>
+                                </constraints>
+                                <buttonConfiguration key="configuration" style="gray">
+                                    <color key="baseBackgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="closeVC" destination="eDU-jz-Zi8" eventType="touchUpInside" id="XlL-np-dxH"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="oCw-hd-qbv"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Q8h-hC-5An" firstAttribute="trailing" secondItem="oCw-hd-qbv" secondAttribute="trailing" id="Hef-wP-zV3"/>
+                            <constraint firstAttribute="bottom" secondItem="Q8h-hC-5An" secondAttribute="bottom" id="Ura-EQ-MbA"/>
+                            <constraint firstItem="Q8h-hC-5An" firstAttribute="top" secondItem="xHz-qq-SwG" secondAttribute="top" id="WRA-Hz-je9"/>
+                            <constraint firstItem="Vpb-Np-qiL" firstAttribute="top" secondItem="oCw-hd-qbv" secondAttribute="top" constant="11" id="Wr5-oN-RAH"/>
+                            <constraint firstItem="Q8h-hC-5An" firstAttribute="leading" secondItem="oCw-hd-qbv" secondAttribute="leading" id="YH1-XW-VR2"/>
+                            <constraint firstItem="oCw-hd-qbv" firstAttribute="trailing" secondItem="Vpb-Np-qiL" secondAttribute="trailing" constant="25" id="wxQ-Bk-ddI"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HTd-Q0-XYM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2805.5999999999999" y="-14.039408866995075"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="4f0-O1-jiG">
             <objects>
@@ -377,6 +434,7 @@
     <resources>
         <image name="AZ" width="25" height="24"/>
         <image name="Photo" width="194.66667175292969" height="195.66667175292969"/>
+        <image name="map" width="50" height="50"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
