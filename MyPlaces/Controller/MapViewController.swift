@@ -64,7 +64,7 @@ extension MapViewController: MKMapViewDelegate {
 
         if annotationView == nil {
             annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: annotationID)
-            annotationView?.canShowCallout = true //банер
+            annotationView?.canShowCallout = true //банер показать
         }
 
         if let imageData = place.imageData {
@@ -72,7 +72,9 @@ extension MapViewController: MKMapViewDelegate {
             imageView.layer.cornerRadius = 10
             imageView.clipsToBounds = true
             imageView.image = UIImage(data: imageData)
-
+            annotationView?.glyphImage = UIImage(systemName: "pin")
+            annotationView?.glyphTintColor = .white
+            annotationView?.markerTintColor = .red
             annotationView?.rightCalloutAccessoryView = imageView //отображение картинки в баннере
         }
         return annotationView
