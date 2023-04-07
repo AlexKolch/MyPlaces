@@ -10,7 +10,7 @@ import MapKit
 
 class MapViewController: UIViewController {
 
-    var place: Place! //передаем сюда place из других vc
+    var place = Place() //передаем сюда place из других vc
     let annotationID = "annotationID"
 
     @IBOutlet weak var mapView: MKMapView!
