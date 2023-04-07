@@ -9,9 +9,15 @@ import UIKit
 import MapKit
 import CoreLocation
 
+protocol MapViewControllerDelegate {
+    func getAddress(_ address: String?)
+}
+
 class MapViewController: UIViewController {
     // MARK: - Properties
+    var mapVCDelegate: MapViewControllerDelegate?
     var place = Place() //передаем сюда place из других vc
+
     let annotationID = "annotationID"
     let locationManager = CLLocationManager() //настройка служб геолокации
     let regionMeters = 10_000.00
@@ -25,6 +31,7 @@ class MapViewController: UIViewController {
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        addressLabel.text = ""
         mapView.delegate = self
         setupMapView()
         checkLocationServices()
@@ -40,6 +47,8 @@ class MapViewController: UIViewController {
     }
 
     @IBAction func tappedDoneButton() {
+        mapVCDelegate?.getAddress(addressLabel.text)
+        dismiss(animated: true)
     }
 
 
@@ -133,6 +142,13 @@ class MapViewController: UIViewController {
             mapView.setRegion(region, animated: true)
         }
     }
+//поолучаем координаты точки по центру экрана
+    private func getCenterLocation(for mapView: MKMapView) -> CLLocation {
+        let latitude = mapView.centerCoordinate.latitude
+        let longitude = mapView.centerCoordinate.longitude
+
+        return CLLocation(latitude: latitude, longitude: longitude)
+    }
 
     private func showAlert(title: String, message: String) {
 
@@ -169,6 +185,34 @@ extension MapViewController: MKMapViewDelegate {
             annotationView?.rightCalloutAccessoryView = imageView //отображение картинки в баннере
         }
         return annotationView
+    }
+//вызывается при смене региона. Получаем адрес под меткой
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let center = getCenterLocation(for: mapView)
+        let geocoder = CLGeocoder()
+
+        geocoder.reverseGeocodeLocation(center) { placemarks, error in
+            if let error = error {
+                print(error)
+                return
+            }
+
+            guard let placemarks = placemarks else { return }
+
+            let placemark = placemarks.first
+            let streetName = placemark?.thoroughfare
+            let buildNumber = placemark?.subThoroughfare
+
+            DispatchQueue.main.async {
+                if streetName != nil && buildNumber != nil {
+                    self.addressLabel.text = "\(streetName!), \(buildNumber!)"
+                } else if streetName != nil {
+                    self.addressLabel.text = "\(streetName!)"
+                } else {
+                    self.addressLabel.text = ""
+                }
+            }
+        }
     }
 }
 

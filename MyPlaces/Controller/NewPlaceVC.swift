@@ -74,6 +74,7 @@ class NewPlaceVC: UITableViewController {
         guard let id = segue.identifier, let mapVC = segue.destination as? MapViewController else {return}
 
         mapVC.segueID = id
+        mapVC.mapVCDelegate = self
 
         if id == "showPlace" {
             mapVC.place.name = placeName.text! //передаем в св-ва нашей переменной данные
@@ -185,5 +186,12 @@ extension NewPlaceVC: UIImagePickerControllerDelegate {
         imageIsChanged = true
 
         dismiss(animated: true)
+    }
+}
+//передаем гео по делегату
+extension NewPlaceVC: MapViewControllerDelegate {
+
+    func getAddress(_ address: String?) {
+        placeLocation.text = address
     }
 }
