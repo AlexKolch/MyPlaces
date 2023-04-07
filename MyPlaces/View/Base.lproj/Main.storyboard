@@ -391,10 +391,24 @@
                                     <action selector="closeVC" destination="eDU-jz-Zi8" eventType="touchUpInside" id="XlL-np-dxH"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWy-oe-8yS">
+                                <rect key="frame" x="285" y="665" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="gXk-a5-eBt"/>
+                                    <constraint firstAttribute="height" constant="50" id="wdS-Fp-oEf"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="Location"/>
+                                <connections>
+                                    <action selector="tapInUserLocation" destination="eDU-jz-Zi8" eventType="touchUpInside" id="GFX-Ao-Fms"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="oCw-hd-qbv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="oCw-hd-qbv" firstAttribute="bottom" secondItem="hWy-oe-8yS" secondAttribute="bottom" constant="40" id="36s-hp-Rxi"/>
+                            <constraint firstItem="oCw-hd-qbv" firstAttribute="trailing" secondItem="hWy-oe-8yS" secondAttribute="trailing" constant="40" id="83e-iu-Ccb"/>
                             <constraint firstItem="Q8h-hC-5An" firstAttribute="trailing" secondItem="oCw-hd-qbv" secondAttribute="trailing" id="Hef-wP-zV3"/>
                             <constraint firstAttribute="bottom" secondItem="Q8h-hC-5An" secondAttribute="bottom" id="Ura-EQ-MbA"/>
                             <constraint firstItem="Q8h-hC-5An" firstAttribute="top" secondItem="xHz-qq-SwG" secondAttribute="top" id="WRA-Hz-je9"/>
@@ -436,6 +450,7 @@
     </scenes>
     <resources>
         <image name="AZ" width="25" height="24"/>
+        <image name="Location" width="128" height="128"/>
         <image name="Photo" width="194.66667175292969" height="195.66667175292969"/>
         <image name="map" width="50" height="50"/>
         <systemColor name="systemBackgroundColor">
