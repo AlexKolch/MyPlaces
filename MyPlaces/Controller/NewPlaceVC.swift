@@ -50,7 +50,6 @@ class NewPlaceVC: UITableViewController {
     }
 
     func savePlace() {
-
         let image = imageIsChanged ? placeImage.image : #imageLiteral(resourceName: "imagePlaceholder")
 
         //конверт UIImage в Data и создаем новый объект
@@ -69,15 +68,20 @@ class NewPlaceVC: UITableViewController {
             closure?(newPlace)
         }
     }
-
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier != "showMap" {return}
+//получаем id перехода и экземпляр
+        guard let id = segue.identifier, let mapVC = segue.destination as? MapViewController else {return}
 
-        let mapVC = segue.destination as! MapViewController
-        mapVC.place.name = placeName.text! //передаем в св-ва нашей переменной данные
-        mapVC.place.location = placeLocation.text
-        mapVC.place.type = placeType.text
-        mapVC.place.imageData = placeImage.image?.pngData()
+        mapVC.segueID = id
+
+        if id == "showPlace" {
+            mapVC.place.name = placeName.text! //передаем в св-ва нашей переменной данные
+            mapVC.place.location = placeLocation.text
+            mapVC.place.type = placeType.text
+            mapVC.place.imageData = placeImage.image?.pngData()
+        }
+
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
@@ -85,7 +89,7 @@ class NewPlaceVC: UITableViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-
+    // MARK: - TableView delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             let cameraIcon = #imageLiteral(resourceName: "camera")
@@ -116,7 +120,7 @@ class NewPlaceVC: UITableViewController {
             view.endEditing(true)
         }
     }
-
+    // MARK: - private Method
 //настройка окна редактирования
     private func setupEditScreen() {
         if currentPlace != nil {

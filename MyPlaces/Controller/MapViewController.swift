@@ -15,14 +15,18 @@ class MapViewController: UIViewController {
     let annotationID = "annotationID"
     let locationManager = CLLocationManager() //настройка служб геолокации
     let regionMeters = 10_000.00
+    var segueID = ""
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapPinImage: UIImageView!
+    @IBOutlet weak var addressLabel: UILabel!
+    @IBOutlet weak var doneButton: UIButton!
 
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        setupPlacemark()
+        setupMapView()
         checkLocationServices()
     }
     
@@ -32,12 +36,22 @@ class MapViewController: UIViewController {
     }
 
     @IBAction func tapInUserLocation() {
-        if let coordinate = locationManager.location?.coordinate {
-            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionMeters, longitudinalMeters: regionMeters)
-            mapView.setRegion(region, animated: true)
-        }
+      showUserLocation()
     }
 
+    @IBAction func tappedDoneButton() {
+    }
+
+
+//гео карты в зависимости от segueID
+    private func setupMapView() {
+        if segueID == "showPlace" {
+            setupPlacemark()
+            mapPinImage.isHidden = true
+            addressLabel.isHidden = true
+            doneButton.isHidden = true
+        }
+    }
 
     private func setupPlacemark() {
         guard let location = place.location else {return}
@@ -89,6 +103,7 @@ class MapViewController: UIViewController {
         switch locationManager.authorizationStatus {
         case .authorizedWhenInUse:
             mapView.showsUserLocation = true
+            if segueID == "getAddress" { showUserLocation() }
             break
         case .denied:
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -108,6 +123,14 @@ class MapViewController: UIViewController {
             break
         @unknown default:
             print("New case is avalible")
+        }
+    }
+
+//находит гео пользователя
+    private func showUserLocation() {
+        if let coordinate = locationManager.location?.coordinate {
+            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionMeters, longitudinalMeters: regionMeters)
+            mapView.setRegion(region, animated: true)
         }
     }
 
@@ -151,12 +174,9 @@ extension MapViewController: MKMapViewDelegate {
 
 // MARK: - CLLocationManagerDelegate
 extension MapViewController: CLLocationManagerDelegate {
+
 //отслеживает изменение статуса гео в реальном времени
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkLocationAuthorization()
     }
-
-//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-//        checkLocationAuthorization()
-//    }
 }
