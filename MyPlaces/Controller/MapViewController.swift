@@ -15,18 +15,24 @@ protocol MapViewControllerDelegate {
 
 class MapViewController: UIViewController {
     // MARK: - Properties
+    let mapManager = MapManager()
+
     var mapVCDelegate: MapViewControllerDelegate?
     var place = Place() //передаем сюда place из других vc
 
     let annotationID = "annotationID"
-    let locationManager = CLLocationManager() //настройка служб геолокации
-    let regionMeters = 1000.00
     var segueID = ""
-    var placeCoordinate: CLLocationCoordinate2D? //для хранения координат
-    var directionsArray: [MKDirections] = []
+
     var previousLocation: CLLocation? {
         didSet {
-            startTrackingUserLocation()
+            mapManager.startTrackingUserLocation(for: mapView, and: previousLocation) { currentLocation in
+
+                self.previousLocation = currentLocation
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self.mapManager.showUserLocation(mapView: self.mapView)
+                }
+            }
         }
     } //принимает предыдущее гео, нужно для трэкинга
 
@@ -42,7 +48,6 @@ class MapViewController: UIViewController {
         addressLabel.text = ""
         mapView.delegate = self
         setupMapView()
-        checkLocationServices()
     }
     
     // MARK: - Method
@@ -51,7 +56,7 @@ class MapViewController: UIViewController {
     }
 
     @IBAction func tapInUserLocation() {
-      showUserLocation()
+        mapManager.showUserLocation(mapView: mapView)
     }
 
     @IBAction func tappedDoneButton() {
@@ -60,201 +65,26 @@ class MapViewController: UIViewController {
     }
 
     @IBAction func tappedGoButton() {
-        getDirections()
+        mapManager.getDirections(for: mapView) { location in
+            self.previousLocation = location
+        }
     }
 
-
-//гео карты в зависимости от segueID
+//Режим карты в зависимости от segueID
     private func setupMapView() {
-
         goButton.isHidden = true
 
+        mapManager.checkLocationServices(mapView: mapView, segueIdentifier: segueID) {
+            mapManager.locationManager.delegate = self
+        }
+
         if segueID == "showPlace" {
-            setupPlacemark()
+            mapManager.setupPlacemark(place: place, mapView: mapView)
             mapPinImage.isHidden = true
             addressLabel.isHidden = true
             doneButton.isHidden = true
             goButton.isHidden = false
         }
-    }
-
-//отменяет действующие маршруты и удаляет с карты
-    private func resetMapView(withNew directions: MKDirections) {
-        mapView.removeOverlays(mapView.overlays)
-        directionsArray.append(directions)
-        let _ = directionsArray.map { $0.cancel() } //отменяет маршрут
-        directionsArray.removeAll()
-    }
-
-    private func setupPlacemark() {
-        guard let location = place.location else {return}
-
-        let geocoder = CLGeocoder() //обработка переданной локации
-        geocoder.geocodeAddressString(location) { placemarks, error in
-
-            if let error = error {
-                print(error)
-                return
-            }
-            guard let placemarks = placemarks else {return}
-
-            let placemark = placemarks.first //получаем геоточку
-
-            let annotation = MKPointAnnotation() //описываем точку на карте
-            annotation.title = self.place.name
-            annotation.subtitle = self.place.type
-
-            guard let placemarkLocation = placemark?.location else {return} //получаем местоположение маркера
-
-            annotation.coordinate = placemarkLocation.coordinate //привязываем аннотацию к этой точке
-            self.placeCoordinate = placemarkLocation.coordinate
-
-            self.mapView.showAnnotations([annotation], animated: true) //видимая область для аннотаций
-            self.mapView.selectAnnotation(annotation, animated: true ) //выделяет маркер крупно
-        }
-    }
-
-    private func checkLocationServices() {
-        //метод проверяет вкл ли службы геолокации
-        if CLLocationManager.locationServicesEnabled() {
-            setupLocationManager()
-            checkLocationAuthorization()
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.showAlert(title: "Location services are disabled",
-                               message: "To enable it go: Settings -> Privacy -> Location services and turn On")
-            }
-        }
-    }
-
-    private func setupLocationManager() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest // настройка точности определения гео юзера
-    }
-
-    //проверяем статус разрешения использования гео юзера
-    private func checkLocationAuthorization() {
-        switch locationManager.authorizationStatus {
-        case .authorizedWhenInUse:
-            mapView.showsUserLocation = true
-            if segueID == "getAddress" { showUserLocation() }
-            break
-        case .denied:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.showAlert(title: "Location services are disabled",
-                               message: "To enable it go: Settings -> Privacy -> Location services and turn On")
-            }
-            break
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .restricted:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.showAlert(title: "Location services are disabled",
-                               message: "To enable it go: Settings -> Privacy -> Location services and turn On")
-            }
-            break
-        case .authorizedAlways:
-            break
-        @unknown default:
-            print("New case is avalible")
-        }
-    }
-
-//находит гео пользователя и фокусирует карту на нем
-    private func showUserLocation() {
-        if let coordinate = locationManager.location?.coordinate {
-            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionMeters, longitudinalMeters: regionMeters)
-            mapView.setRegion(region, animated: true)
-        }
-    }
-
-    private func startTrackingUserLocation() {
-        guard let previousLocation = previousLocation else { return }
-        let center = getCenterLocation(for: mapView)
-
-        guard center.distance(from: previousLocation) > 50 else { return }
-        self.previousLocation = center
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.showUserLocation()
-        }
-    }
-
-//центрируем вью относительно координаты
-    private func getCenterLocation(for mapView: MKMapView) -> CLLocation {
-        let latitude = mapView.centerCoordinate.latitude
-        let longitude = mapView.centerCoordinate.longitude
-
-        return CLLocation(latitude: latitude, longitude: longitude)
-    }
-
-//Построение маршрута
-    private func getDirections() {
-        guard let location = locationManager.location?.coordinate else {
-            showAlert(title: "Error", message: "Current location is not found")
-            return
-        }
-
-        locationManager.startUpdatingLocation() //режим отслеживания гео пользователя
-        previousLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)//начальное гео пользователя
-
-        guard let request = createDirectionsRequest(from: location) else {
-            showAlert(title: "Error", message: "Destination is not found")
-            return
-        }
-        //создаем маршрут
-        let directions = MKDirections(request: request)
-        resetMapView(withNew: directions) //удаляет действующие маршруты
-
-        //рассчет маршрута
-        directions.calculate { (response, error) in
-            if let error = error {
-                print(error)
-                return
-            }
-
-            guard let response = response else {
-                self.showAlert(title: "Error", message: "Directions is not available")
-                return
-            }
-
-            for route in response.routes {
-                self.mapView.addOverlay(route.polyline)
-                self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-
-                let distance = String(format: "$.1f", route.distance / 1000) //переводим в км и округляем до десятых
-                let timeInterval = route.expectedTravelTime
-//тут можно передать дистанцию в лейбл
-                print(distance)
-                print(timeInterval)
-            }
-        }
-    }
-
-//Настройка запроса для маршрута
-    private func createDirectionsRequest(from coordinate: CLLocationCoordinate2D) -> MKDirections.Request? {
-
-        guard let destinationCoordinate = placeCoordinate else { return nil }
-
-        let startingLocation = MKPlacemark(coordinate: coordinate)
-        let destination = MKPlacemark(coordinate: destinationCoordinate)
-
-        let request = MKDirections.Request()
-        request.source = MKMapItem(placemark: startingLocation)
-        request.destination = MKMapItem(placemark: destination)
-        request.transportType = .automobile
-        request.requestsAlternateRoutes = true //предлагать альтернативные пути
-
-        return request
-    }
-
-    private func showAlert(title: String, message: String) {
-
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "Ok", style: .default)
-
-        alert.addAction(action)
-        present(alert, animated: true)
     }
 }
 
@@ -286,14 +116,15 @@ extension MapViewController: MKMapViewDelegate {
     }
 
 
-//вызывается при изменении отображаемой области карты. Получаем адрес под меткой
+   //Вызывается при изменении отображаемой области карты. Получаем адрес под меткой
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        let center = getCenterLocation(for: mapView)
+
+        let center = mapManager.getCenterLocation(for: mapView)
         let geocoder = CLGeocoder()
 
         if segueID == "showPlace" && previousLocation != nil {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                self.showUserLocation()
+                self.mapManager.showUserLocation(mapView: self.mapView)
             }
         }
 
@@ -323,8 +154,7 @@ extension MapViewController: MKMapViewDelegate {
         }
     }
 
-
-//отображаем путь на картe
+   //Отображаем путь на картe
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let lineRender = MKPolylineRenderer(overlay: overlay as! MKPolyline)
         lineRender.strokeColor = .systemOrange
@@ -337,8 +167,8 @@ extension MapViewController: MKMapViewDelegate {
 // MARK: - CLLocationManagerDelegate
 extension MapViewController: CLLocationManagerDelegate {
 
-//отслеживает изменение статуса гео в реальном времени
+  //отслеживает изменение статуса доступа к службам гео
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        checkLocationAuthorization()
+        mapManager.checkLocationAuthorization(mapView: mapView, segueID: segueID)
     }
 }
