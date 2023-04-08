@@ -13,6 +13,7 @@
 * UIPickerView
 * UISegmentedControl
 * AutoLayout
+* CocoaPods, SPM
 * GCD
 
 ---
