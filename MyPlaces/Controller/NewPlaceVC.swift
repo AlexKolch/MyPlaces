@@ -36,8 +36,9 @@ class NewPlaceVC: UITableViewController {
         setupEditScreen()
         setupStars()
     }
+    
     // MARK: - Method
-    func setupStars(){
+    func setupStars() {
         cosmosView.settings.starSize = 40
         cosmosView.settings.emptyBorderWidth = 2.5
         cosmosView.settings.starMargin = 7
@@ -50,13 +51,39 @@ class NewPlaceVC: UITableViewController {
     }
 
     func savePlace() {
-        var image: UIImage?
+        let image = imageIsChanged ? placeImage.image : #imageLiteral(resourceName: "imagePlaceholder")
 
-        if imageIsChanged {
-            image = placeImage.image
+        //конверт UIImage в Data и создаем новый объект
+        let imageData = image?.pngData()
+        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: currentRating)
+
+        if currentPlace != nil {
+            try! realm.write(){
+                currentPlace?.imageData = newPlace.imageData
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+                currentPlace?.rating = newPlace.rating
+            }
         } else {
-            image = #imageLiteral(resourceName: "imagePlaceholder")
+            closure?(newPlace)
         }
+    }
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//получаем id перехода и экземпляр
+        guard let id = segue.identifier, let mapVC = segue.destination as? MapViewController else {return}
+
+        mapVC.segueID = id
+        mapVC.mapVCDelegate = self
+
+        if id == "showPlace" {
+            mapVC.place.name = placeName.text! //передаем в св-ва нашей переменной данные
+            mapVC.place.location = placeLocation.text
+            mapVC.place.type = placeType.text
+            mapVC.place.imageData = placeImage.image?.pngData()
+        }
+
         //конверт UIImage в Data и создаем новый объект
         let imageData = image?.pngData()
         let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: currentRating)
@@ -79,7 +106,7 @@ class NewPlaceVC: UITableViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-
+    // MARK: - TableView delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             let cameraIcon = #imageLiteral(resourceName: "camera")
@@ -110,6 +137,23 @@ class NewPlaceVC: UITableViewController {
             view.endEditing(true)
         }
     }
+    // MARK: - private Method
+//настройка окна редактирования
+    private func setupEditScreen() {
+        if currentPlace != nil {
+            setupNavigationBar()
+            imageIsChanged = true
+
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
+
+            placeImage.image = image
+            placeImage.contentMode = .scaleAspectFill
+            placeName.text = currentPlace?.name
+            placeLocation.text = currentPlace?.location
+            placeType.text = currentPlace?.type
+            cosmosView.rating = currentPlace.rating
+        }
+    }
 
 //настройка окна редактирования
     private func setupEditScreen() {
@@ -138,7 +182,7 @@ class NewPlaceVC: UITableViewController {
     }
 }
 
-    // MARK: - TextField delegate
+// MARK: - TextField delegate
 extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
 //скрываем клавиатуру при нажатии Done
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -154,6 +198,7 @@ extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
         }
     }
 }
+
 // MARK: - UIImagePickerController
 extension NewPlaceVC: UIImagePickerControllerDelegate {
 
@@ -175,5 +220,12 @@ extension NewPlaceVC: UIImagePickerControllerDelegate {
         imageIsChanged = true
 
         dismiss(animated: true)
+    }
+}
+//передаем гео по делегату
+extension NewPlaceVC: MapViewControllerDelegate {
+
+    func getAddress(_ address: String?) {
+        placeLocation.text = address
     }
 }
