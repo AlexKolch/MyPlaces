@@ -36,6 +36,7 @@ class NewPlaceVC: UITableViewController {
         setupEditScreen()
         setupStars()
     }
+    
     // MARK: - Method
     func setupStars() {
         cosmosView.settings.starSize = 40
@@ -83,6 +84,21 @@ class NewPlaceVC: UITableViewController {
             mapVC.place.imageData = placeImage.image?.pngData()
         }
 
+        //конверт UIImage в Data и создаем новый объект
+        let imageData = image?.pngData()
+        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: currentRating)
+
+        if currentPlace != nil {
+            try! realm.write(){
+                currentPlace?.imageData = newPlace.imageData
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+                currentPlace?.rating = newPlace.rating
+            }
+        } else {
+            closure?(newPlace)
+        }
     }
 
     @IBAction func tappedSave(_ sender: UIBarButtonItem) {
@@ -139,6 +155,23 @@ class NewPlaceVC: UITableViewController {
         }
     }
 
+//настройка окна редактирования
+    private func setupEditScreen() {
+        if currentPlace != nil {
+            setupNavigationBar()
+            imageIsChanged = true
+
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
+
+            placeImage.image = image
+            placeImage.contentMode = .scaleAspectFill
+            placeName.text = currentPlace?.name
+            placeLocation.text = currentPlace?.location
+            placeType.text = currentPlace?.type
+            cosmosView.rating = currentPlace.rating
+        }
+    }
+
     private func setupNavigationBar(){
         //backBarButtonItem без заголовка
         if let topItem = navigationController?.navigationBar.topItem {
@@ -149,7 +182,7 @@ class NewPlaceVC: UITableViewController {
     }
 }
 
-    // MARK: - TextField delegate
+// MARK: - TextField delegate
 extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
 //скрываем клавиатуру при нажатии Done
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -165,6 +198,7 @@ extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
         }
     }
 }
+
 // MARK: - UIImagePickerController
 extension NewPlaceVC: UIImagePickerControllerDelegate {
 
