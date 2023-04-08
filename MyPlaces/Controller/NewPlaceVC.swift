@@ -53,7 +53,6 @@ class NewPlaceVC: UITableViewController {
     func savePlace() {
         let image = imageIsChanged ? placeImage.image : #imageLiteral(resourceName: "imagePlaceholder")
 
-        //конверт UIImage в Data и создаем новый объект
         let imageData = image?.pngData()
         let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: currentRating)
 
@@ -71,7 +70,7 @@ class NewPlaceVC: UITableViewController {
     }
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//получаем id перехода и экземпляр
+
         guard let id = segue.identifier, let mapVC = segue.destination as? MapViewController else {return}
 
         mapVC.segueID = id
@@ -82,22 +81,6 @@ class NewPlaceVC: UITableViewController {
             mapVC.place.location = placeLocation.text
             mapVC.place.type = placeType.text
             mapVC.place.imageData = placeImage.image?.pngData()
-        }
-
-        //конверт UIImage в Data и создаем новый объект
-        let imageData = image?.pngData()
-        let newPlace = Place(name: placeName.text!, location: placeLocation.text, type: placeType.text, imageData: imageData, rating: currentRating)
-
-        if currentPlace != nil {
-            try! realm.write(){
-                currentPlace?.imageData = newPlace.imageData
-                currentPlace?.name = newPlace.name
-                currentPlace?.location = newPlace.location
-                currentPlace?.type = newPlace.type
-                currentPlace?.rating = newPlace.rating
-            }
-        } else {
-            closure?(newPlace)
         }
     }
 
@@ -138,24 +121,7 @@ class NewPlaceVC: UITableViewController {
         }
     }
     // MARK: - private Method
-//настройка окна редактирования
-    private func setupEditScreen() {
-        if currentPlace != nil {
-            setupNavigationBar()
-            imageIsChanged = true
-
-            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
-
-            placeImage.image = image
-            placeImage.contentMode = .scaleAspectFill
-            placeName.text = currentPlace?.name
-            placeLocation.text = currentPlace?.location
-            placeType.text = currentPlace?.type
-            cosmosView.rating = currentPlace.rating
-        }
-    }
-
-//настройка окна редактирования
+   //настройка окна редактирования
     private func setupEditScreen() {
         if currentPlace != nil {
             setupNavigationBar()
@@ -182,9 +148,9 @@ class NewPlaceVC: UITableViewController {
     }
 }
 
-// MARK: - TextField delegate
+    // MARK: - TextField delegate
 extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
-//скрываем клавиатуру при нажатии Done
+    //скрываем клавиатуру при нажатии Done
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -199,7 +165,7 @@ extension NewPlaceVC: UITextFieldDelegate, UINavigationControllerDelegate {
     }
 }
 
-// MARK: - UIImagePickerController
+    // MARK: - UIImagePickerController
 extension NewPlaceVC: UIImagePickerControllerDelegate {
 
     func chooseImagePicker(source: UIImagePickerController.SourceType) {
@@ -211,6 +177,7 @@ extension NewPlaceVC: UIImagePickerControllerDelegate {
             present(imagePicker, animated: true)
         }
     }
+
     //присваеваем картинку в placeImage
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         placeImage.image = info[.editedImage] as? UIImage
@@ -222,9 +189,9 @@ extension NewPlaceVC: UIImagePickerControllerDelegate {
         dismiss(animated: true)
     }
 }
-//передаем гео по делегату
-extension NewPlaceVC: MapViewControllerDelegate {
 
+extension NewPlaceVC: MapViewControllerDelegate {
+    //передаем гео по делегату
     func getAddress(_ address: String?) {
         placeLocation.text = address
     }
