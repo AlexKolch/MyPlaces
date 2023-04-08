@@ -44,6 +44,10 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         myTableView.reloadData()
     }
+
+    deinit {
+        print("Deinit", ViewController.self)
+    }
     // MARK: - Method
     @IBAction func addPlace(_ sender: Any) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newPlaceVC") as! NewPlaceVC
