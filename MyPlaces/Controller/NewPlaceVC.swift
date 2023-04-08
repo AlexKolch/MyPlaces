@@ -36,7 +36,11 @@ class NewPlaceVC: UITableViewController {
         setupEditScreen()
         setupStars()
     }
-    
+
+    deinit {
+        print("Deinit", NewPlaceVC.self)
+    }
+
     // MARK: - Method
     func setupStars() {
         cosmosView.settings.starSize = 40

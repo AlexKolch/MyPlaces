@@ -18,6 +18,10 @@ class MapManager {
 
     // MARK: - Method
 
+    deinit {
+        print("Deinit", MapManager.self)
+    }
+
     //Маркер заведения
     func setupPlacemark(place: Place, mapView: MKMapView) {
         guard let location = place.location else {return}

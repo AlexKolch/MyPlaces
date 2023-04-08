@@ -49,6 +49,10 @@ class MapViewController: UIViewController {
         mapView.delegate = self
         setupMapView()
     }
+
+    deinit {
+        print("Deinit", MapViewController.self)
+    }
     
     // MARK: - Method
     @IBAction func closeVC() {
