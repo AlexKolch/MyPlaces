@@ -6,7 +6,9 @@
  Использовал в проекте:
 
 * MVC
-* Frameworks (MapKit, Realm, Cosmos) 
+* CLLocation
+* Realm
+* Custom Star Rating by Cosmos 
 * UITableView
 * MapKit View
 * UISearch
